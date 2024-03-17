@@ -1,6 +1,7 @@
 package com.ecomapp.productservice.controllers;
 
 import com.ecomapp.productservice.models.Product;
+import com.ecomapp.productservice.services.ProductService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
+    private ProductService productService;
     @GetMapping()
     public ArrayList<Product> getAllProducts() {
         ArrayList products = new ArrayList<>();
@@ -16,7 +18,7 @@ public class ProductController {
 
     @PostMapping()
     public Product addNewProduct(@RequestBody Product product) {
-        return new Product();
+        return productService.addNewProduct(product);
     }
 
     @PutMapping("/{id}")
