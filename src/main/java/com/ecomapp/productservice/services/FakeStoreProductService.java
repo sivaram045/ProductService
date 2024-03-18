@@ -65,6 +65,9 @@ public class FakeStoreProductService implements ProductService {
         return convertToProduct(fakeStoreProductDTO);
     }
 
+
+
+
     @Override
     public Product addNewProduct(Product product) {
         FakeStoreProductDTO fakeStoreProduct = new FakeStoreProductDTO();
@@ -82,7 +85,7 @@ public class FakeStoreProductService implements ProductService {
         HttpMessageConverterExtractor<FakeStoreProductDTO> responseExtractor =
                 new HttpMessageConverterExtractor<>(FakeStoreProductDTO.class, restTemplate.getMessageConverters());
         FakeStoreProductDTO response = restTemplate.execute("https://fakestoreapi.com/products/" + product,
-                HttpMethod.PUT, requestCallback, responseExtractor);
+                HttpMethod.POST, requestCallback, responseExtractor);
 
         return convertToProduct(response);
 
