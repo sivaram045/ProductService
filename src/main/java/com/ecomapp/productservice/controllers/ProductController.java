@@ -1,5 +1,6 @@
 package com.ecomapp.productservice.controllers;
 
+import com.ecomapp.productservice.DTOs.FakeStoreProductDTO;
 import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

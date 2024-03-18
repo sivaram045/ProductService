@@ -4,18 +4,26 @@ import com.ecomapp.productservice.DTOs.FakeStoreProductDTO;
 import com.ecomapp.productservice.models.Category;
 import com.ecomapp.productservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpMessageConverterExtractor;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FakeStoreProductService implements ProductService {
     private RestTemplate restTemplate;
+    //private FakeStoreProductDTO fakeStoreProductDTO;
 
     @Autowired
     public FakeStoreProductService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        //this.fakeStoreProductDTO = fakeStoreProductDTO;
     }
 
     private Product convertToProduct(FakeStoreProductDTO fakeStoreProductDTO) {
@@ -29,6 +37,18 @@ public class FakeStoreProductService implements ProductService {
         product.setImageURL(fakeStoreProductDTO.getImage());
 
         return product;
+    }
+
+    private FakeStoreProductDTO convertToFakeStoreProductDTO(Product product) {
+        FakeStoreProductDTO fakeStoreProductDTO = new FakeStoreProductDTO();
+        fakeStoreProductDTO.setId(product.getId());
+        fakeStoreProductDTO.setTitle(product.getTitle());
+        fakeStoreProductDTO.setPrice(product.getPrice());
+        fakeStoreProductDTO.setDescription(product.getDescription());
+        fakeStoreProductDTO.setCategory(product.getCategory().getTitle());
+        fakeStoreProductDTO.setImage(product.getImageURL());
+
+        return fakeStoreProductDTO;
     }
 
     @Override
@@ -47,6 +67,26 @@ public class FakeStoreProductService implements ProductService {
 
     @Override
     public Product addNewProduct(Product product) {
-        return null;
+        FakeStoreProductDTO fakeStoreProduct = new FakeStoreProductDTO();
+        fakeStoreProduct.setTitle(product.getTitle());
+        fakeStoreProduct.setPrice(product.getPrice());
+        fakeStoreProduct.setDescription(product.getDescription());
+        fakeStoreProduct.setCategory(product.getCategory().getTitle());
+        fakeStoreProduct.setImage(product.getImageURL());
+//        fakeStoreProduct = restTemplate.postForObject(
+//                "https://fakestoreapi.com/products",
+//                product,
+//                FakeStoreProductDTO.class);
+
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(fakeStoreProduct, FakeStoreProductDTO.class);
+        HttpMessageConverterExtractor<FakeStoreProductDTO> responseExtractor =
+                new HttpMessageConverterExtractor<>(FakeStoreProductDTO.class, restTemplate.getMessageConverters());
+        FakeStoreProductDTO response = restTemplate.execute("https://fakestoreapi.com/products/" + product,
+                HttpMethod.PUT, requestCallback, responseExtractor);
+
+        return convertToProduct(response);
+
+
+        //return convertToProduct(fakeStoreProduct);
     }
 }
