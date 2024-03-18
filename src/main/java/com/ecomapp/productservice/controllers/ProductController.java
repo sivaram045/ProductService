@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -24,8 +25,8 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ArrayList<Product> getAllProducts() {
-        ArrayList products = new ArrayList<>();
+    public List<Product> getAllProducts() {
+        List <Product> products = productService.getAllProducts();
         return products;
     }
 
@@ -36,7 +37,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public Product replaceProduct (@PathVariable long id, @RequestBody Product product) {
-        return new Product();
+        return productService.replaceProduct(id, product);
     }
 
 }

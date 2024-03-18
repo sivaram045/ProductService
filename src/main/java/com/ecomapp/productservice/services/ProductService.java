@@ -11,7 +11,7 @@ public interface ProductService {
     public Product getSingleProduct(Long id);
     Product addNewProduct(Product product);
 //    public void addNewCategory(Product product);
-//    Product updateProduct(Long id, Product product);
+    Product replaceProduct(Long id, Product product);
 //    Product replaceProduct(Long id, Product product);
 //    boolean deleteProduct(Long id);
 
