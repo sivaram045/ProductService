@@ -1,5 +1,6 @@
 package com.ecomapp.productservice.models;
 
+import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,8 +8,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Category {
-    private long id;
+@Entity
+public class Category extends BaseModel{
+    //private long id;
     private String title;
-    private List<Product> products;
+    //private List<Product> products;  gives "Failed to initialize JPA EntityManagerFactory " error
 }
