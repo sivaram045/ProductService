@@ -40,4 +40,11 @@ public class ProductController {
         return productService.replaceProduct(id, product);
     }
 
+    @GetMapping("/limit/{number}")
+    public List<Product> getNProducts(@PathVariable int number) {
+        List<Product> products = productService.searchByLimit(number);
+        return products;
+    }
+
+
 }

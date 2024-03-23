@@ -122,4 +122,18 @@ public class FakeStoreProductService implements ProductService {
 
         return convertToProduct(response);
     }
+
+    @Override
+    public List<Product> searchByLimit(int a) {
+        FakeStoreProductDTO[] fakeStoreProductDTO2 = restTemplate.getForObject(
+                "https://fakestoreapi.com/products", FakeStoreProductDTO[].class);
+
+        List<Product> ans = new ArrayList<>();
+
+        for(int i=0; i<a; i++) {
+            ans.add(convertToProduct(fakeStoreProductDTO2[i]));
+        }
+
+        return  ans;
+    }
 }
