@@ -3,7 +3,9 @@ package com.ecomapp.productservice.controllers;
 import com.ecomapp.productservice.DTOs.FakeStoreProductDTO;
 import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.services.ProductService;
+import com.ecomapp.productservice.services.SelfProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(@Qualifier ("SelfProductService") ProductService productService) {
         this.productService = productService;
     }
 
