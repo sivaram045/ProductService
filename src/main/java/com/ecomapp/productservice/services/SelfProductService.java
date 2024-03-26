@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
+
+import static io.micrometer.common.util.StringUtils.isEmpty;
 
 @Primary
 @Service("SelfProductService")
@@ -37,6 +40,12 @@ public class SelfProductService implements ProductService{
 
     @Override
     public Product addNewProduct(Product product) {
+        Optional<Category> optionalCategory = categoryRepository.findByTitle(product.getCategory().getTitle());
+        if(optionalCategory.isEmpty()) {
+            product.setCategory(categoryRepository.save(product.getCategory()));
+        }else {
+            product.setCategory(optionalCategory.get());
+        }
 
         return productRepository.save(product);
     }
