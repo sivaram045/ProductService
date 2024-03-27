@@ -12,5 +12,6 @@ import java.util.List;
 public class Category extends BaseModel{
     //private long id;
     private String title;
+    private int noOfProducts;
     //private List<Product> products;  gives "Failed to initialize JPA EntityManagerFactory " error
 }

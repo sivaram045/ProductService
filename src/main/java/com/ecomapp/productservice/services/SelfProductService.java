@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,11 @@ public class SelfProductService implements ProductService{
             product.setCategory(categoryRepository.save(product.getCategory()));
         }else {
             product.setCategory(optionalCategory.get());
+            product.getCategory().setNoOfProducts(product.getCategory().getNoOfProducts()+1);
         }
+
+       //product.getCategory().setNoOfProducts(productRepository.countByCategory(product.getCategory()));
+
 
         return productRepository.save(product);
     }

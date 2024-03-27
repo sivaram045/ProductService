@@ -1,5 +1,6 @@
 package com.ecomapp.productservice.repositories;
 
+import com.ecomapp.productservice.models.Category;
 import com.ecomapp.productservice.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    public Optional<Product> findProductById(Long id);
-
+    Optional<Product> findProductById(Long id);
+    int countByCategory(Category category);
     Product save(Product product);
 
 }

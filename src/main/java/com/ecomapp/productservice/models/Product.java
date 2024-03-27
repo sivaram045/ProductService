@@ -20,4 +20,5 @@ public class Product extends BaseModel{
                                           // while inserting a product into the database.
     private Category category;
     private String imageURL;
+    //private int noOfProducts;
 }
