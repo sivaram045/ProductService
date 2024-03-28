@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.CrudRepository;
 
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,5 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findProductById(Long id);
     int countByCategory(Category category);
     Product save(Product product);
+    List<Product> getAllProducts();
 
 }
