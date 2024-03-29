@@ -30,12 +30,17 @@ public class SelfProductService implements ProductService{
 
     @Override
     public List<Product> getAllProducts() {
-        return null;
+        return productRepository.findAll();
     }
 
     @Override
     public Product getSingleProduct(Long id) {
-        return null;
+        Optional<Product> optionalProduct = productRepository.findProductById(id);
+        if(optionalProduct.isEmpty()) {
+            throw new RuntimeException("check product id");
+        }else {
+            return optionalProduct.get();
+        }
     }
 
 
