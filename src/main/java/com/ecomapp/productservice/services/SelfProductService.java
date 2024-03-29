@@ -4,6 +4,7 @@ import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.models.Category;
 import com.ecomapp.productservice.repositories.CategoryRepository;
 import com.ecomapp.productservice.repositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Controller;
@@ -106,5 +107,18 @@ public class SelfProductService implements ProductService{
     @Override
     public List<Product> searchByLimit(int a) {
         return null;
+    }
+
+    @Override
+
+    public Product deleteProduct(Long id) {
+        Optional<Product> optionalProduct = productRepository.findProductById(id);
+        if(optionalProduct.isEmpty()) {
+            throw new RuntimeException("check product id");
+        }
+        Category currProdCategory = optionalProduct.get().getCategory();
+        currProdCategory.setNoOfProducts(currProdCategory.getNoOfProducts()-1);
+
+        return productRepository.deleteProductById(id);
     }
 }

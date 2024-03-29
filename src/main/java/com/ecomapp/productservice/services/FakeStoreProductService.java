@@ -137,4 +137,9 @@ public class FakeStoreProductService implements ProductService {
 
         return  ans;
     }
+
+    @Override
+    public Product deleteProduct(Long id) {
+        return null;
+    }
 }
