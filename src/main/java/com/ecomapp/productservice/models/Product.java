@@ -15,7 +15,7 @@ public class Product extends BaseModel{
     private String title;
     private Double price;
     private String description;
-    @ManyToOne(cascade = CascadeType.ALL) //since a category must be created for a product,
+    @ManyToOne(cascade = {CascadeType.PERSIST}) //since a category must be created for a product,
                                           // not using cascade will give an error..!
                                           // while inserting a product into the database.
                                           //***look into cascadeTypes ALL is not preferred***

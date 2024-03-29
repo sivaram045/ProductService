@@ -41,24 +41,56 @@ public class SelfProductService implements ProductService{
 
     @Override
     public Product addNewProduct(Product product) {
-        Optional<Category> optionalCategory = categoryRepository.findByTitle(product.getCategory().getTitle());
-        if(optionalCategory.isEmpty()) {
-            product.setCategory(categoryRepository.save(product.getCategory()));
-            product.getCategory().setNoOfProducts(1);
-        }else {
-            product.setCategory(optionalCategory.get());
-            product.getCategory().setNoOfProducts(product.getCategory().getNoOfProducts()+1);
+        //handling duplicate titles
+        if(productRepository.findByTitle(product.getTitle())==null) {
+            //handling duplicate categories
+            Optional<Category> optionalCategory = categoryRepository.findByTitle(product.getCategory().getTitle());
+            if (optionalCategory.isEmpty()) {
+                product.setCategory(categoryRepository.save(product.getCategory()));
+                product.getCategory().setNoOfProducts(1);
+            } else {
+                product.setCategory(optionalCategory.get());
+                product.getCategory().setNoOfProducts(product.getCategory().getNoOfProducts() + 1);
+            }
+
+            //product.getCategory().setNoOfProducts(productRepository.countByCategory(product.getCategory()));
+
+
+            return productRepository.save(product);
         }
-
-       //product.getCategory().setNoOfProducts(productRepository.countByCategory(product.getCategory()));
-
-
-        return productRepository.save(product);
+        else throw new RuntimeException("Title already exist");
     }
 
     @Override
     public Product updateProduct(Long id, Product product) {
-        return null;
+        Optional<Product> optionalProduct = productRepository.findProductById(id);
+        Optional<Category> optionalCategory = categoryRepository.findByTitle(product.getCategory().getTitle());
+
+        if(optionalProduct.isEmpty()) {     //if no product available with the id, throw error
+            throw new RuntimeException("check product Id..!");
+        }else {
+            //updating data
+            if(product.getPrice()!=optionalProduct.get().getPrice()) {
+                optionalProduct.get().setPrice(product.getPrice());
+            }
+            if(product.getDescription()!=optionalProduct.get().getDescription()) {
+                optionalProduct.get().setDescription(product.getDescription());
+            }
+            if(product.getImageURL()!=optionalProduct.get().getImageURL()) {
+                optionalProduct.get().setImageURL(product.getImageURL());
+            }
+            //checking category already exist
+            if(optionalCategory.isEmpty()) {
+                product.setCategory(categoryRepository.save(product.getCategory()));
+                product.getCategory().setNoOfProducts(1);
+            }else {
+                product.setCategory(optionalCategory.get());
+                product.getCategory().setNoOfProducts(product.getCategory().getNoOfProducts()+1);
+            }
+
+            return productRepository.save(optionalProduct.get());
+        }
+        //return null;
     }
 
     @Override
