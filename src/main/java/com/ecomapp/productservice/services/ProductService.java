@@ -14,6 +14,6 @@ public interface ProductService {
     public Product replaceProduct(Long id, Product product);
     public List<Product> searchByLimit(int a);
 //    Product replaceProduct(Long id, Product product);
-    Product deleteProduct(Long id);
+    boolean deleteProduct(Long id);
 
 }

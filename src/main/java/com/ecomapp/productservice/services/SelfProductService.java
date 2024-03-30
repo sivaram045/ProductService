@@ -110,8 +110,8 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-
-    public Product deleteProduct(Long id) {
+    @Transactional
+    public boolean deleteProduct(Long id) {
         Optional<Product> optionalProduct = productRepository.findProductById(id);
         if(optionalProduct.isEmpty()) {
             throw new RuntimeException("check product id");
@@ -119,6 +119,10 @@ public class SelfProductService implements ProductService{
         Category currProdCategory = optionalProduct.get().getCategory();
         currProdCategory.setNoOfProducts(currProdCategory.getNoOfProducts()-1);
 
-        return productRepository.deleteProductById(id);
+        Optional<Product> deletedProduct = productRepository.deleteProductById(optionalProduct.get());
+        if(deletedProduct.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }
