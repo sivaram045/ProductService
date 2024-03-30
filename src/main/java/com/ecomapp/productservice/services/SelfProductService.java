@@ -4,6 +4,7 @@ import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.models.Category;
 import com.ecomapp.productservice.repositories.CategoryRepository;
 import com.ecomapp.productservice.repositories.ProductRepository;
+import jakarta.transaction.TransactionScoped;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -13,6 +14,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static io.micrometer.common.util.StringUtils.isEmpty;
@@ -110,15 +112,18 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-
+    @Transactional
     public Product deleteProduct(Long id) {
         Optional<Product> optionalProduct = productRepository.findProductById(id);
         if(optionalProduct.isEmpty()) {
-            throw new RuntimeException("check product id");
+            throw new NoSuchElementException("product with id "+id+" not found" );
         }
-        Category currProdCategory = optionalProduct.get().getCategory();
-        currProdCategory.setNoOfProducts(currProdCategory.getNoOfProducts()-1);
+//        Category currProdCategory = optionalProduct.get().getCategory();
+//        currProdCategory.setNoOfProducts(currProdCategory.getNoOfProducts()-1);
+         optionalProduct.get().getCategory().setNoOfProducts(
+                 optionalProduct.get().getCategory().getNoOfProducts()-1);
 
-        return productRepository.deleteProductById(id);
+        productRepository.deleteById(id);
+        return optionalProduct.get();
     }
 }
