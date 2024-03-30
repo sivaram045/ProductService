@@ -139,7 +139,7 @@ public class FakeStoreProductService implements ProductService {
     }
 
     @Override
-    public boolean deleteProduct(Long id) {
-        return false;
+    public Product deleteProduct(Long id) {
+        return null;
     }
 }

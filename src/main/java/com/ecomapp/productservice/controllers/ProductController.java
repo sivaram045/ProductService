@@ -6,6 +6,8 @@ import com.ecomapp.productservice.services.ProductService;
 import com.ecomapp.productservice.services.SelfProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,8 +24,10 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getSingleProduct(@PathVariable long id) {
-        return productService.getSingleProduct(id);
+    public ResponseEntity<Product> getSingleProduct(@PathVariable long id) {
+        ResponseEntity<Product> response = new ResponseEntity<>(
+                productService.getSingleProduct(id),HttpStatus.FORBIDDEN);
+        return response;
     }
 
     @GetMapping()
@@ -53,7 +57,7 @@ public class ProductController {
         return productService.updateProduct(id, product);
     }
     @DeleteMapping("/{id}")
-    public boolean deleteProduct(@PathVariable long id) {
+    public Product deleteProduct(@PathVariable long id) {
         return productService.deleteProduct(id);
     }
 
