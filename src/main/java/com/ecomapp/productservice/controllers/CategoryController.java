@@ -32,7 +32,7 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.getAllCategories(),HttpStatus.OK);
     }
 
-    @GetMapping("/{title}/{all}")
+    @GetMapping("/title/all")
     public ResponseEntity<List<String>> getAllCategoryTitles () {
         return new ResponseEntity<>(categoryService.getAllCategoryTitles(),HttpStatus.OK);
     }

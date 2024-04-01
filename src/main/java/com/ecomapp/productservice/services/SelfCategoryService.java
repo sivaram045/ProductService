@@ -3,6 +3,7 @@ package com.ecomapp.productservice.services;
 import com.ecomapp.productservice.models.Category;
 import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.repositories.CategoryRepository;
+import com.ecomapp.productservice.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,8 +14,11 @@ import java.util.Optional;
 @Service
 public class SelfCategoryService implements CategoryService {
     CategoryRepository categoryRepository;
-    public SelfCategoryService(CategoryRepository categoryRepository) {
+    ProductRepository productRepository;
+    public SelfCategoryService(CategoryRepository categoryRepository,
+                               ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
     @Override
     public List<Category> getAllCategories() {
@@ -32,8 +36,8 @@ public class SelfCategoryService implements CategoryService {
         if(optionalCategory.isEmpty()) {
             throw new NoSuchElementException("Category "+category+" doesn't exist");
         }
-        List<Product> productList = new ArrayList<>(categoryRepository.findByName(category));
 
-        return productList;
+        return categoryRepository.findByName(category);
+        //return productRepository.findByCategory(optionalCategory.get()); //this also works
     }
 }
