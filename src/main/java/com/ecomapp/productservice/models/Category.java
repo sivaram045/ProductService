@@ -1,6 +1,6 @@
 package com.ecomapp.productservice.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import git com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,6 +19,7 @@ public class Category extends BaseModel{
     private int noOfProducts;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.REMOVE)
     @JsonIgnore
-    private List<Product> products;     //gives "Failed to initialize JPA EntityManagerFactory " error and
-                                        //returning bulk repeated date in find all jpa query
+    private List<Product> products;     //gives "Failed to initialize JPA EntityManagerFactory " error --> cardinality mapping clears this issue
+                                        //returning bulk repeated date in find all jpa query --> @JsonIgnore clears the issue
+
 }
