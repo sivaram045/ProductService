@@ -1,6 +1,6 @@
 package com.ecomapp.productservice.models;
 
-import git com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

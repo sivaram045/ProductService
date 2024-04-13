@@ -33,7 +33,7 @@ class ProductServiceApplicationTests {
         List<ProdWithIdTitlePrice> productList = new ArrayList<>(productRepository.getProdIdTitlePrice(2L));
         for(int i=0; i<productList.size(); i++) {
             System.out.println(productList.get(i).getId());
-            System.out.println(productList.get(i).getDescription());
+            System.out.println(productList.get(i).getTitle());
             System.out.println(productList.get(i).getPrice());
         }
     }
