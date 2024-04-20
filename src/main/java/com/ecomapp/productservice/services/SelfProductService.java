@@ -92,9 +92,17 @@ public class SelfProductService implements ProductService{
             if(optionalCategory.isEmpty()) {
                 product.setCategory(categoryRepository.save(product.getCategory()));
                 product.getCategory().setNoOfProducts(1);
+
+                //reducing count of old category
+                Product oldProduct = productRepository.findByTitle(product.getTitle());
+                oldProduct.getCategory().setNoOfProducts(oldProduct.getCategory().getNoOfProducts()-1);
             }else {
                 product.setCategory(optionalCategory.get());
                 product.getCategory().setNoOfProducts(product.getCategory().getNoOfProducts()+1);
+
+                //reducing count of old category
+                Product oldProduct = productRepository.findByTitle(product.getTitle());
+                oldProduct.getCategory().setNoOfProducts(oldProduct.getCategory().getNoOfProducts()-1);
             }
 
             return productRepository.save(optionalProduct.get());
