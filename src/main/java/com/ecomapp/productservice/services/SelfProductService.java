@@ -1,5 +1,6 @@
 package com.ecomapp.productservice.services;
 
+import com.ecomapp.productservice.exceptions.ProductNotExistException;
 import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.models.Category;
 import com.ecomapp.productservice.repositories.CategoryRepository;
@@ -37,10 +38,10 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public Product getSingleProduct(Long id) {
+    public Product getSingleProduct(Long id) throws ProductNotExistException {
         Optional<Product> optionalProduct = productRepository.findProductById(id);
         if(optionalProduct.isEmpty()) {
-            throw new RuntimeException("check product id");
+            throw new ProductNotExistException(id+"");
         }else {
             return optionalProduct.get();
         }

@@ -1,6 +1,7 @@
 package com.ecomapp.productservice.controllers;
 
 import com.ecomapp.productservice.DTOs.FakeStoreProductDTO;
+import com.ecomapp.productservice.exceptions.ProductNotExistException;
 import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.services.ProductService;
 import com.ecomapp.productservice.services.SelfProductService;
@@ -25,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getSingleProduct(@PathVariable long id) {
+    public ResponseEntity<Product> getSingleProduct(@PathVariable long id) throws ProductNotExistException {
         ResponseEntity<Product> response = new ResponseEntity<>(
                 productService.getSingleProduct(id),HttpStatus.FORBIDDEN);
         return response;

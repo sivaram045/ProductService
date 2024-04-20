@@ -1,6 +1,7 @@
 package com.ecomapp.productservice.UnitTests;
 
 import com.ecomapp.productservice.controllers.ProductController;
+import com.ecomapp.productservice.exceptions.ProductNotExistException;
 import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.repositories.ProductRepository;
 import com.ecomapp.productservice.services.ProductService;
@@ -24,7 +25,7 @@ public class ProductControllerTest {
 
 
     @Test
-    void testGetSingleProduct() {
+    void testGetSingleProduct() throws ProductNotExistException {
 
         //Arrange
         Long id = 2L;
