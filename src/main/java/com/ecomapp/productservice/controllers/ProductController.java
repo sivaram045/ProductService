@@ -28,7 +28,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<Product> getSingleProduct(@PathVariable long id) throws ProductNotExistException {
         ResponseEntity<Product> response = new ResponseEntity<>(
-                productService.getSingleProduct(id),HttpStatus.FORBIDDEN);
+                productService.getSingleProduct(id),HttpStatus.OK);
         return response;
     }
 
@@ -44,7 +44,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public Product replaceProduct (@PathVariable long id, @RequestBody Product product) {
+    public Product replaceProduct (@PathVariable long id, @RequestBody Product product) throws ProductNotExistException {
         return productService.replaceProduct(id, product);
     }
 
@@ -55,11 +55,11 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public Product updateProduct (@PathVariable long id, @RequestBody Product product) {
+    public Product updateProduct (@PathVariable long id, @RequestBody Product product) throws ProductNotExistException{
         return productService.updateProduct(id, product);
     }
     @DeleteMapping("/{id}")
-    public Product deleteProduct(@PathVariable long id) {
+    public Product deleteProduct(@PathVariable long id) throws ProductNotExistException {
         return productService.deleteProduct(id);
     }
 

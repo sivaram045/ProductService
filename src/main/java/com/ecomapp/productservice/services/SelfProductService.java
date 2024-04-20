@@ -71,12 +71,12 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public Product updateProduct(Long id, Product product) {
+    public Product updateProduct(Long id, Product product) throws ProductNotExistException{
         Optional<Product> optionalProduct = productRepository.findProductById(id);
         Optional<Category> optionalCategory = categoryRepository.findByTitle(product.getCategory().getTitle());
 
         if(optionalProduct.isEmpty()) {     //if no product available with the id, throw error
-            throw new RuntimeException("check product Id..!");
+            throw new ProductNotExistException(id+" ");
         }else {
             //updating data
             if(product.getPrice()!=optionalProduct.get().getPrice()) {
@@ -103,8 +103,29 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public Product replaceProduct(Long id, Product product) {
-        return null;
+    public Product replaceProduct(Long id, Product product) throws ProductNotExistException {
+        Optional<Product> optionalProduct = productRepository.findProductById(id);
+        Optional<Category> optionalCategory = categoryRepository.findByTitle(product.getCategory().getTitle());
+
+        if(optionalProduct.isEmpty()) {
+            throw new ProductNotExistException("poduct with id "+id+" not found");
+        }
+        optionalProduct.get().setTitle(product.getTitle());
+        optionalProduct.get().setPrice(product.getPrice());
+        optionalProduct.get().setDescription(product.getDescription());
+
+        if(optionalCategory.isEmpty()) {
+            optionalProduct.get().setCategory(categoryRepository.save(product.getCategory()));
+            optionalProduct.get().getCategory().setNoOfProducts(1);
+        }else {
+            Product oldProduct = productRepository.findByTitle(product.getTitle());
+            oldProduct.getCategory().setNoOfProducts(oldProduct.getCategory().getNoOfProducts()-1);
+            optionalProduct.get().setCategory(optionalCategory.get());
+            optionalCategory.get().setNoOfProducts(optionalCategory.get().getNoOfProducts()+1);
+        }
+
+
+        return productRepository.save(optionalProduct.get());
     }
 
     @Override
@@ -114,11 +135,11 @@ public class SelfProductService implements ProductService{
 
     @Override
     @Transactional
-    public Product deleteProduct(Long id) {
+    public Product deleteProduct(Long id) throws ProductNotExistException{
 
         Optional<Product> optionalProduct = productRepository.findProductById(id);
         if(optionalProduct.isEmpty()) {
-            throw new NoSuchElementException("product with id "+id+" not found" );
+            throw new ProductNotExistException("product with id "+id+" not found" );
         }
 //        Category currProdCategory = optionalProduct.get().getCategory();
 //        currProdCategory.setNoOfProducts(currProdCategory.getNoOfProducts()-1);
