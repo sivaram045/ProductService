@@ -1,5 +1,6 @@
 package com.ecomapp.productservice.controllers;
 
+import com.ecomapp.productservice.exceptions.CategoryNotExistException;
 import com.ecomapp.productservice.models.Category;
 import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.services.CategoryService;
@@ -37,7 +38,7 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.getAllCategoryTitles(),HttpStatus.OK);
     }
     @GetMapping("/{title}")
-    public ResponseEntity<List<Product>> getInCategory(@PathVariable String title) {
+    public ResponseEntity<List<Product>> getInCategory(@PathVariable String title) throws CategoryNotExistException {
         return new ResponseEntity<>(categoryService.getInCategory(title),HttpStatus.FOUND);
     }
 }

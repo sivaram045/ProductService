@@ -1,5 +1,6 @@
 package com.ecomapp.productservice.services;
 
+import com.ecomapp.productservice.exceptions.CategoryNotExistException;
 import com.ecomapp.productservice.models.Category;
 import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.repositories.CategoryRepository;
@@ -30,11 +31,11 @@ public class SelfCategoryService implements CategoryService {
     }
 
     @Override
-    public List<Product> getInCategory(String category) {
+    public List<Product> getInCategory(String category) throws CategoryNotExistException {
         Optional<Category> optionalCategory = categoryRepository.findByTitle(category);
 
         if(optionalCategory.isEmpty()) {
-            throw new NoSuchElementException("Category "+category+" doesn't exist");
+            throw new CategoryNotExistException("Category '"+category+"' doesn't exist");
         }
 
         return categoryRepository.findByName(category);
