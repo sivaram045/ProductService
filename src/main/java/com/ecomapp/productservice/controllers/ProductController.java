@@ -1,6 +1,8 @@
 package com.ecomapp.productservice.controllers;
 
 import com.ecomapp.productservice.DTOs.FakeStoreProductDTO;
+import com.ecomapp.productservice.DTOs.UserDTO;
+import com.ecomapp.productservice.commons.AuthenticationCommons;
 import com.ecomapp.productservice.exceptions.ProductNotExistException;
 import com.ecomapp.productservice.models.Product;
 import com.ecomapp.productservice.services.ProductService;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +22,16 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
     private ProductService productService;
+    private RestTemplate restTemplate;
+    private AuthenticationCommons authenticationCommons;
 
     @Autowired
-    public ProductController(@Qualifier ("SelfProductService") ProductService productService) {
+    public ProductController(@Qualifier ("SelfProductService") ProductService productService,
+                             RestTemplate restTemplate,
+                             AuthenticationCommons authenticationCommons) {
         this.productService = productService;
+        this.restTemplate = restTemplate;
+        this.authenticationCommons = authenticationCommons;
     }
 
     @GetMapping("/{id}")
@@ -33,9 +42,24 @@ public class ProductController {
     }
 
     @GetMapping()
-    public List<Product> getAllProducts() {
+    public ResponseEntity<List<Product>> getAllProducts(@RequestHeader String token) {
+        UserDTO userDTO = authenticationCommons.validateToken(token);
+        if(userDTO == null) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         List <Product> products = productService.getAllProducts();
-        return products;
+
+        List<Product> finalProducts = new ArrayList<>();
+
+        for (Product p: products) { // o  p q
+            p.setTitle("Hello" + p.getTitle());
+            finalProducts.add(p);
+        }
+
+        ResponseEntity<List<Product>> response = new ResponseEntity<>(
+                finalProducts, HttpStatus.FORBIDDEN
+        );
+        return response;
     }
 
     @PostMapping()
