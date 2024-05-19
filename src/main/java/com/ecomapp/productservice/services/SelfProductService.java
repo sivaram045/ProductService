@@ -124,7 +124,7 @@ public class SelfProductService implements ProductService{
          optionalProduct.get().getCategory().setNoOfProducts(
                  optionalProduct.get().getCategory().getNoOfProducts()-1);
 
-
+//comment
         productRepository.deleteById(id);
         return optionalProduct.get();
 
