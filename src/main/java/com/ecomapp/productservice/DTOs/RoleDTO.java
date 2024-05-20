@@ -8,5 +8,5 @@ import java.util.List;
 @Setter
 public class RoleDTO {
     private String Title;
-    private List<UserDTO> users;
+    //private List<UserDTO> users;
 }

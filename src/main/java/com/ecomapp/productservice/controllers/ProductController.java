@@ -2,6 +2,7 @@ package com.ecomapp.productservice.controllers;
 
 import com.ecomapp.productservice.DTOs.FakeStoreProductDTO;
 import com.ecomapp.productservice.DTOs.UserDTO;
+import com.ecomapp.productservice.DTOs.RoleDTO;
 import com.ecomapp.productservice.commons.AuthenticationCommons;
 import com.ecomapp.productservice.exceptions.ProductNotExistException;
 import com.ecomapp.productservice.models.Product;
@@ -28,7 +29,7 @@ public class ProductController {
     @Autowired
     public ProductController(@Qualifier ("SelfProductService") ProductService productService,
                              RestTemplate restTemplate,
-                             AuthenticationCommons authenticationCommons) {
+                              AuthenticationCommons authenticationCommons) {
         this.productService = productService;
         this.restTemplate = restTemplate;
         this.authenticationCommons = authenticationCommons;
@@ -42,11 +43,24 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Product>> getAllProducts(@RequestHeader String token) {
+    public ResponseEntity<List<Product>> getAllProducts(@RequestHeader("Token") String token) {
+
         UserDTO userDTO = authenticationCommons.validateToken(token);
         if(userDTO == null) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+
+        boolean isAdmin = false;
+
+        for (RoleDTO role: userDTO.getRoles()) {
+            if (role.getTitle().equals("ADMIN")) {
+                isAdmin = true;
+                break;
+            }
+        }
+
+        if (!isAdmin) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
         List <Product> products = productService.getAllProducts();
 
         List<Product> finalProducts = new ArrayList<>();
