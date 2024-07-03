@@ -12,12 +12,9 @@ import java.util.List;
 @Setter
 public class UserDTO {
     private String Name;
-
     private String Email;
     private String Password;
-
-    private List<RoleDTO> roles;
-
+    private List<RoleDTO> Roles;
     private List<TokenDTO> token;
 }
 
