@@ -19,7 +19,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 @Controller
-@RequestMapping("/{category}")
+@RequestMapping("/category")
 public class CategoryController {
     private CategoryService categoryService;
     @Autowired
