@@ -14,9 +14,9 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/product").authenticated()
-                        .requestMatchers("/product").hasAuthority("ADMIN")
-                        .anyRequest().permitAll()
+                        //.requestMatchers("/product").authenticated()
+                        .requestMatchers("/product").hasAuthority("SCOPE_USER")
+                       // .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();

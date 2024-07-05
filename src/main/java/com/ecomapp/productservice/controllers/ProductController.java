@@ -43,23 +43,25 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Product>> getAllProducts(@RequestHeader("Token") String token) {
+    public ResponseEntity<List<Product>> getAllProducts() {
 
-        UserDTO userDTO = authenticationCommons.validateToken(token);
-        if(userDTO == null) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        //commented manual authentication after spring security implementation
 
-        boolean isAdmin = false;
-
-        for (RoleDTO role: userDTO.getRoles()) {
-            if (role.getTitle().equals("ADMIN")) {
-                isAdmin = true;
-                break;
-            }
-        }
-
-        if (!isAdmin) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        UserDTO userDTO = authenticationCommons.validateToken(token);
+//        if(userDTO == null) {
+//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+//        }
+//
+//        boolean isAdmin = true; //true for temp usage, should be false
+//
+//        for (RoleDTO role: userDTO.getRoles()) {
+//            if (role.getTitle().equals("SCOPE_ADMIN")) {
+//                isAdmin = true;
+//                break;
+//            }
+//        }
+//
+//        if (!isAdmin) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         List <Product> products = productService.getAllProducts();
 
@@ -71,7 +73,7 @@ public class ProductController {
         }
 
         ResponseEntity<List<Product>> response = new ResponseEntity<>(
-                finalProducts, HttpStatus.FORBIDDEN
+                finalProducts, HttpStatus.OK
         );
         return response;
     }
