@@ -17,7 +17,8 @@ public class SpringSecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         //.requestMatchers("/product").authenticated()
-                                .requestMatchers(HttpMethod.GET,"/product").permitAll()
+                                //.requestMatchers(HttpMethod.GET,"/product").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/product/**").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/product").hasAuthority("SCOPE_ADMIN")
                                 .requestMatchers(HttpMethod.PUT,"/product").hasAuthority("SCOPE_ADMIN")
                                 .requestMatchers(HttpMethod.DELETE,"/product").hasAuthority("SCOPE_ADMIN")
