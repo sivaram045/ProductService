@@ -1,7 +1,9 @@
 package com.ecomapp.productservice.security;
 
+import com.ecomapp.productservice.models.Product;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -15,8 +17,12 @@ public class SpringSecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         //.requestMatchers("/product").authenticated()
-                        .requestMatchers("/product").hasAuthority("SCOPE_USER")
-                       // .anyRequest().permitAll()
+                                .requestMatchers(HttpMethod.GET,"/product").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/product").hasAuthority("SCOPE_ADMIN")
+                                .requestMatchers(HttpMethod.PUT,"/product").hasAuthority("SCOPE_ADMIN")
+                                .requestMatchers(HttpMethod.DELETE,"/product").hasAuthority("SCOPE_ADMIN")
+                                .requestMatchers(HttpMethod.PATCH,"/product").hasAuthority("SCOPE_ADMIN")
+                        //.anyRequest().permitAll()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();
