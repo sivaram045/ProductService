@@ -1,11 +1,14 @@
 package com.ecomapp.productservice.controllers;
 
 import com.ecomapp.productservice.DTOs.FakeStoreProductDTO;
+import com.ecomapp.productservice.DTOs.ProductDTO;
 import com.ecomapp.productservice.DTOs.UserDTO;
 import com.ecomapp.productservice.DTOs.RoleDTO;
 import com.ecomapp.productservice.commons.AuthenticationCommons;
 import com.ecomapp.productservice.exceptions.ProductNotExistException;
+import com.ecomapp.productservice.models.Category;
 import com.ecomapp.productservice.models.Product;
+import com.ecomapp.productservice.services.CategoryService;
 import com.ecomapp.productservice.services.ProductService;
 import com.ecomapp.productservice.services.SelfProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +26,17 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
     private ProductService productService;
+    private CategoryService categoryService;
     private RestTemplate restTemplate;
     private AuthenticationCommons authenticationCommons;
 
     @Autowired
     public ProductController(@Qualifier ("SelfProductService") ProductService productService,
+                             CategoryService categoryService,
                              RestTemplate restTemplate,
                               AuthenticationCommons authenticationCommons) {
         this.productService = productService;
+        this.categoryService = categoryService;
         this.restTemplate = restTemplate;
         this.authenticationCommons = authenticationCommons;
     }
@@ -79,8 +85,14 @@ public class ProductController {
     }
 
     @PostMapping()
-    public Product addNewProduct(@RequestBody Product product) {
-        return productService.addNewProduct(product);
+    public Product addNewProduct(@RequestBody ProductDTO product) {
+        Product tempProduct = new Product();
+        tempProduct.setTitle(product.getTitle());
+        tempProduct.setPrice(product.getPrice());
+        tempProduct.setDescription(product.getDescription());
+        tempProduct.setCategory(new Category());
+        tempProduct.getCategory().setTitle(product.getCategory());
+        return productService.addNewProduct(tempProduct);
     }
 
     @PutMapping("/{id}")

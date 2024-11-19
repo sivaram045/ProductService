@@ -6,9 +6,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 public class SpringSecurityConfig {
@@ -29,7 +37,7 @@ public class SpringSecurityConfig {
         return http.build();
     }
 
-    @Bean
+/*    @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
@@ -37,5 +45,32 @@ public class SpringSecurityConfig {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
+    }*/
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        // Handle "roles" claim
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            // Fetch authorities from "roles" claim
+            Collection<GrantedAuthority> authorities = grantedAuthoritiesConverter.convert(jwt);
+
+            // Add additional authorities from "scope" claim (if it exists and is an array)
+            List<String> scopes = jwt.getClaimAsStringList("scope");
+            if (scopes != null) {
+                authorities.addAll(scopes.stream()
+                        .map(scope -> new SimpleGrantedAuthority("SCOPE_" + scope))
+                        .collect(Collectors.toList()));
+            }
+
+            return authorities;
+        });
+
+        return jwtAuthenticationConverter;
     }
+
+
 }
